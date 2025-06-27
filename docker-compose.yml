@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./Accommodation-App-backend
+    ports:
+      - 9090:9090
+    depends_on:
+      - db
+  frontend:
+    build: ./accommodation-app-frontend
+    ports:
+      - 3000:80
+    depends_on:
+      - backend
+  db:
+    image: postgres:17.4
+    restart: always
+    environment:
+      POSTGRES_USER: emt
+      POSTGRES_PASSWORD: emt
+      POSTGRES_DB: accommodations
+    volumes:
+      - emt-lab-b_pgdata:/var/lib/postgresql/data
+      - ./Accommodation-App-backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./Accommodation-App-backend/views.sql:/docker-entrypoint-initdb.d/views.sql
+    ports:
+      - 2345:5432
+
+volumes:
+  emt-lab-b_pgdata:
